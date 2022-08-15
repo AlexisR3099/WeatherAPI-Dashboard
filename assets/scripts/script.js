@@ -7,6 +7,7 @@ var formSubmit = function(event) {
     let city = document.getElementById('citySearch').value.trim();
     if(city) {
         cityData(city);
+        searchHistory(city);
     } else {
         alert('Enter a city!');
     }
@@ -76,6 +77,28 @@ var futureWeather = function(data) {
     };
 };
 
+var searchHistory = function(city) {
+    if(!historyArray.includes(city)) {
+        historyArray.push(city);
 
+        var thisCitybtn = $(`<button type='button' id='search-btn' class='btn history-btn btn-block'>${city}</button>`);
+
+        $('#search-history').append(thisCitybtn);
+        localStorage.setItem('city', JSON.stringify(historyArray));
+    }
+};
+
+$(document).on('click', '.history-btn', function() {
+    let cityBtn = $(this).text();
+    cityData(cityBtn);
+});
 
 document.querySelector('#search-btn').addEventListener('click', formSubmit);
+$(document).ready(function() {
+    let citySave = JSON.parse(localStorage.getItem('city'));
+    if(citySave != null) {
+        let lastSearch = citySave.length -1;
+        let lastSearchCity = citySave[lastSearch];
+        cityData(lastSearchCity);
+    }
+});
